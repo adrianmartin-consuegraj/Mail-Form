@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Correos</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+
+    <!-- JavaScript -->
+    <script language="javascript" type="text/javascript" src="validate.js" defer></script>
+
+
+    <!-- ### JAVASCRIPT - Functions -->
+    <script language="javascript" type="text/javascript">
+
+
+        function entrar(elemento) {
+            elemento.style.backgroundColor = "lightblue";
+        }
+
+        function salir(elemento) {
+            elemento.style.backgroundColor = "";
+        }
+
+
+        //function Nombre y Comentarios
+        function validarStringInside(elemento, min, max) {
+
+            if (!validarString(elemento.value, min, max)) {
+                elemento.style.backgroundColor = "lightyellow";
+                elemento.style.borderColor = "red";
+                elemento.className = 'form-control is-invalid';
+
+            } else {
+                elemento.style.backgroundColor = "";
+                elemento.style.borderColor = "";
+                elemento.className = 'form-control is-valid';
+
+            }
+        }
+
+
+        //Validar DNI
+        function validarDNIInside(elemento, min, max) {
+
+            if (!validarDNI(elemento.value, min, max)) {
+                elemento.style.backgroundColor = "lightyellow";
+                elemento.style.borderColor = "red";
+                elemento.className = 'form-control is-invalid';
+
+            } else {
+                elemento.style.backgroundColor = "";
+                elemento.style.borderColor = "";
+                elemento.className = 'form-control is-valid';
+
+            }
+
+        }
+
+
+        //Recuperar TIPO DE DOCUMENTO y activar el input NÚMERO DOCUMENTO
+        function seleccionTipoDocumento(elemento) {
+
+            var numeroDocumento = document.getElementById("numeroDocumento");
+
+            if (elemento.value == "NIE" || elemento.value == "NIF" || elemento.value == "CIF") {
+                numeroDocumento.removeAttribute('disabled');
+            } else {
+                numeroDocumento.setAttribute('disabled', 'disabled');
+            }
+        }
+
+
+        //Validar NÚMERO DOCUMENTO según el TIPO DE DOCUMENTO (NIE, NIF, CIF)
+        function validarNumeroDocumento(elemento) {
+
+            var tipoDocumento = document.getElementById("tipoDocumento").value;
+            var error;
+
+            if (tipoDocumento == "NIE") {
+
+                //NIE válido: Y1234567X
+                if (!validarNIE(elemento.value)) {
+                    document.getElementById("numeroDocumentoError").innerHTML = "El nº NIE no es correcto.";
+                    elemento.style.backgroundColor = "lightyellow";
+                    elemento.style.borderColor = "red";
+                    elemento.className = 'form-control is-invalid';
+
+                } else {
+                    elemento.style.backgroundColor = "";
+                    elemento.style.borderColor = "";
+                    elemento.className = 'form-control is-valid';
+
+                }
+
+            }
+
+            if (tipoDocumento == "NIF") {
+                if (!validarDNI(elemento.value)) {
+                    document.getElementById("numeroDocumentoError").innerHTML = "El nº NIF no es correcto.";
+                    elemento.style.backgroundColor = "lightyellow";
+                    elemento.style.borderColor = "red";
+                    elemento.className = 'form-control is-invalid';
+
+                } else {
+                    elemento.style.backgroundColor = "";
+                    elemento.style.borderColor = "";
+                    elemento.className = 'form-control is-valid';
+
+                }
+            }
+
+            if (tipoDocumento == "CIF") {
+                if (!isValidCif(elemento.value)) {
+                    document.getElementById("numeroDocumentoError").innerHTML = "El nº CIF no es correcto.";
+                    elemento.style.backgroundColor = "lightyellow";
+                    elemento.style.borderColor = "red";
+                    elemento.className = 'form-control is-invalid';
+
+                } else {
+                    elemento.style.backgroundColor = "";
+                    elemento.style.borderColor = "";
+                    elemento.className = 'form-control is-valid';
+
+                }
+
+            }
+
+        }
+
+
+        //Recuperar TIPO DE VÍA y activar el input NOMBRE DE VÍA
+        function seleccionTipoVia(elemento) {
+
+            var nombreVia = document.getElementById("nombreVia");
+
+            if (elemento.value == "Calle" || elemento.value == "Paseo" || elemento.value == "Avenida") {
+                nombreVia.removeAttribute('disabled');
+            } else {
+                nombreVia.setAttribute('disabled', 'disabled');
+            }
+        }
+
+
+        function validarNumeroInside(elemento, min, max) {
+
+            if (!validarNumber(elemento.value, min, max)) {
+                elemento.style.backgroundColor = "lightyellow";
+                elemento.style.borderColor = "red";
+                elemento.className = 'form-control is-invalid';
+
+            } else {
+                elemento.style.backgroundColor = "";
+                elemento.style.borderColor = "";
+                elemento.className = 'form-control is-valid';
+
+            }
+
+        }
+
+        function validarPesoVolumetricoInside(elemento) {
+
+            if (elemento == " ") {
+                elemento.style.backgroundColor = "lightyellow";
+                elemento.style.borderColor = "red";
+                elemento.className = 'form-control is-invalid';
+
+            } else {
+                elemento.style.backgroundColor = "";
+                elemento.style.borderColor = "";
+                elemento.className = 'form-control is-valid';
+
+            }
+
+        }
+
+
+
+        //function Código Postal
+        function validarCPInside(elemento) {
+
+            if (!validarCP(elemento)) {
+                elemento.style.backgroundColor = "lightyellow";
+                elemento.style.borderColor = "red";
+                elemento.className = 'form-control is-invalid';
+
+
+            } else {
+                elemento.style.backgroundColor = "";
+                elemento.style.borderColor = "";
+                elemento.className = 'form-control is-valid';
+
+                provinciaEtCA(elemento);
+
+            }
+
+        }
+
+
+        //function Email
+        function validarEmailInside(elemento) {
+
+            if (!validarEmail(elemento.value)) {
+                elemento.style.backgroundColor = "lightyellow";
+                elemento.style.borderColor = "red";
+                elemento.className = 'form-control is-invalid';
+
+            } else {
+                elemento.style.backgroundColor = "";
+                elemento.style.borderColor = "";
+                elemento.className = 'form-control is-valid';
+            }
+        }
+
+
+        //function Móvil
+        function validarMovilInside(elemento) {
+            if (!validarMovil(elemento.value)) {
+                elemento.style.backgroundColor = "lightyellow";
+                elemento.style.borderColor = "red";
+                elemento.className = 'form-control is-invalid';
+
+            } else {
+                elemento.style.backgroundColor = "";
+                elemento.style.borderColor = "";
+                elemento.className = 'form-control is-valid';
+            }
+        }
+
+
+        //function Teléfono
+        function validarTelefonoInside(elemento) {
+            if (!validarTelefono(elemento.value)) {
+                elemento.style.backgroundColor = "lightyellow";
+                elemento.style.borderColor = "red";
+                elemento.className = 'form-control is-invalid';
+
+            } else {
+                elemento.style.backgroundColor = "";
+                elemento.style.borderColor = "";
+                elemento.className = 'form-control is-valid';
+            }
+        }
+
+
+        //function Escalera y Puerta
+        function validarEscaleraYPuertaInside(elemento, min, max) {
+
+            if (validarString(elemento.value, min, max) || validarNumber(elemento.value, min, max)) {
+                elemento.style.backgroundColor = "";
+                elemento.style.borderColor = "";
+                elemento.className = 'form-control is-valid';
+            } else {
+                elemento.style.backgroundColor = "lightyellow";
+                elemento.style.borderColor = "red";
+                elemento.className = 'form-control is-invalid';
+            }
+        }
+
+
+
+
+        //Si Alto, Ancho y Largo estan indicados se activa el botón "CALCULAR"
+        function permitirCacularPesoVolumetrico() {
+
+            var alto = document.getElementById("alto").value;
+            var ancho = document.getElementById("ancho").value;
+            var largo = document.getElementById("largo").value;
+            boton = document.getElementById("calcularPesoVolumetrico");
+
+            var pesoVolumetrico = 0;
+
+            if (alto != "" && ancho != "" && largo != "") {
+                boton.removeAttribute('disabled');
+            } else {
+                boton.setAttribute('disabled', 'disabled');
+            }
+        }
+
+
+
+        //Al hacer click en el botón "CALCULAR" se indicará el Peso Volumétrico
+        function clickCalcularPesoVolumetrico() {
+
+            var alto = document.getElementById("alto").value;
+            var ancho = document.getElementById("ancho").value;
+            var largo = document.getElementById("largo").value;
+            var pesoVolumetrico = 0;
+
+            //Largo x Alto x Ancho / 6000 = Peso Volumétrico
+            pesoVolumetrico = (largo * alto * ancho) / 6000;
+            document.getElementById("pesoVolumetrico").value = pesoVolumetrico;
+
+            var pesoVolumetricoElemento = document.getElementById("pesoVolumetrico");
+            pesoVolumetricoElemento.style.backgroundColor = "";
+            pesoVolumetricoElemento.style.borderColor = "";
+            pesoVolumetricoElemento.className = 'form-control is-valid';
+
+        }
+
+
+        //Validar IBAN
+        function validarIBANInside(elemento) {
+
+            //IBAN válido: ES6000491500051234567892
+            if (!fn_ValidateIBAN(elemento.value)) {
+                elemento.style.backgroundColor = "lightyellow";
+                elemento.style.borderColor = "red";
+                elemento.className = 'form-control is-invalid';
+
+            } else {
+                elemento.style.backgroundColor = "";
+                elemento.style.borderColor = "";
+                elemento.className = 'form-control is-valid';
+            }
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+    <div class="container cabecera">
+        <div class="row align-items-start">
+            <div class="col-3 logo">
+                <img src="img/logo.png">
+            </div>
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <div class="container all">
+
+        <div class="row align-items-center">
+            <p> Mi Oficina > Enviar paquetes > <b>Paq Estándar</b></p>
+            <h3>Paq Estándar - Envío responsable (i)</h3>
+            <div class="col-3 logo">
+                <img src="img/menu.png">
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="formularioBox">
+            <form id="formulario" action="javascript:alert(recuperarDatos())" onsubmit="return validarForm()">
+
+                <!-- 1 · DATOS DESTINATARIO -->
+                <div class="row">
+
+                    <div class="box border-start border-warning border-2">
+                        <h4>Datos del destinatario.</h4>
+                    </div>
+
+                    <p>Tanto si preparas un envío como si preparas varios pon un nombre, así te será más fácil acceder
+                        desde "Mi cuenta" a la relación de envíos que prepares.</p>
+
+                </div>
+
+                <div class="row">
+
+                    <!-- 1.1 FORMULARIO - Nombre -->
+                    <div class="row align-items-center text-end">
+
+                        <div class="col-2">
+                            <label class="fs-5 ">Nombre (1)</label><br>
+                        </div>
+
+                        <div class="col-8">
+                            <input class="form-control" id="nombre" type="text" name="nombre" placeholder="Nombre"
+                                maxlength="60" onfocus="entrar(this)" onblur="salir(this);"
+                                onkeyup="validarStringInside(this,2,60)">
+                            <p class="invalid-feedback" id="errorNombre" style="text-align: center;">El nombre debe
+                                tener entre 2 y 60 caracteres</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <div class="row">
+
+                    <!-- 1.2 FORMULARIO - Apellidos -->
+                    <div class="row align-items-center text-end">
+
+                        <div class="col-2">
+                            <label class="fs-5 ">Apellidos</label><br>
+                        </div>
+
+                        <div class="col-8">
+                            <input class="form-control" id="apellidos" type="text" name="nombre" placeholder="Apellidos"
+                                maxlength="60" onfocus="entrar(this)" onblur="salir(this);"
+                                onkeyup="validarStringInside(this,2,60)">
+                            <p class="invalid-feedback" id="errorApellidos" style="text-align: center;">Los apellidos
+                                deben
+                                tener entre 2 y 60 caracteres</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <div class="row">
+
+                    <!-- 1.3 FORMULARIO - Empresa -->
+                    <div class="row align-items-center text-end">
+
+                        <div class="col-2">
+                            <label class="fs-5 ">Empresa (1)</label><br>
+                        </div>
+
+                        <div class="col-8">
+                            <input class="form-control" id="empresa" type="text" name="nombre" placeholder="Empresa"
+                                maxlength="60" onfocus="entrar(this)" onblur="salir(this);"
+                                onkeyup="validarStringInside(this,2,60)">
+                            <p class="invalid-feedback" id="errorEmpresa" style="text-align: center;">El nombre de la
+                                empresa debe tener entre 2 y 60 caracteres</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <!-- TIPO DE DOCUMENTO + NÚMERO DOCUMENTO -->
+                <div class="row">
+
+                    <div class="col-4">
+
+                        <!-- 1.4 FORMULARIO - Tipo Documento -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-6">
+                                <label class="fs-5 ">Tipo de Documento</label><br>
+                            </div>
+
+                            <div class="col-6">
+                                <select class="form-select form-select-lg" id="tipoDocumento" name="tipoDocumento"
+                                    onfocus="entrar(this);" onblur="salir(this)"
+                                    onchange="seleccionTipoDocumento(this)">
+                                    <option value="selecciona" selected="selected" hidden>-</option>
+                                    <option value="NIE">NIE</option>
+                                    <option value="NIF">NIF</option>
+                                    <option value="CIF">CIF</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-6">
+
+                        <!-- 1.5 FORMULARIO - Número Documento -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-4">
+                                <label class="fs-5 ">Número Documento</label><br>
+                            </div>
+
+                            <div class="col-8">
+                                <input class="form-control" id="numeroDocumento" type="text" name="numeroDocumento"
+                                    placeholder="Número Documento" maxlength="60" disabled onfocus="entrar(this)"
+                                    onblur="salir(this);" onchange="validarNumeroDocumento(this)">
+                                <p class="invalid-feedback" id="numeroDocumentoError" style="text-align: center;"></p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- TIPO VÍA + NOMBRE VÍA -->
+                <div class="row">
+
+                    <div class="col-4">
+
+                        <!-- 1.6 FORMULARIO - Tipo Vía -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-6">
+                                <label class="fs-5 ">Tipo Vía</label><br>
+                            </div>
+
+                            <div class="col-6">
+                                <select class="form-select form-select-lg" id="tipoVia" name="tipoVia"
+                                    onfocus="entrar(this);" onblur="salir(this)"
+                                    onchange="seleccionTipoVia(this)">
+                                    <option value="selecciona" selected="selected" hidden>-</option>
+                                    <option value="Calle">Calle</option>
+                                    <option value="Paseo">Paseo</option>
+                                    <option value="Avenida">Avenida</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-6">
+
+                        <!-- 1.7 FORMULARIO - Nombre Vía -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-4">
+                                <label class="fs-5 ">Nombre Vía</label><br>
+                            </div>
+
+                            <div class="col-8">
+                                <input class="form-control" id="nombreVia" type="text" name="nombreVia"
+                                    placeholder="Nombre Vía" maxlength="60" disabled onfocus="entrar(this)"
+                                    onblur="salir(this)" onkeyup="validarStringInside(this,1,35)">
+                                <p class="invalid-feedback" id="errorNombre" style="text-align: center;">El nombre de la
+                                    vía debe contener entre 1 y 35 caracteres</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <!-- NÚMERO + BLOQUE + PORTAL -->
+                <div class="row">
+
+                    <div class="col-3">
+
+                        <!-- 1.8 FORMULARIO - Número -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-7">
+                                <label class="fs-5 ">Número</label><br>
+                            </div>
+
+                            <div class="col-5">
+                                <input class="form-control" id="numero" type="text" name="numero" placeholder="Número"
+                                    maxlength="2" onfocus="entrar(this)" onblur="salir(this)"
+                                    onkeyup="validarNumeroInside(this,1,2)">
+                                <p class="invalid-feedback" style="text-align: center;">El número debe estar entre 1 y
+                                    199</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-3">
+
+                        <!-- 1.9 FORMULARIO - Bloque -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-7">
+                                <label class="fs-5 ">Bloque</label><br>
+                            </div>
+
+                            <div class="col-5">
+                                <input class="form-control" id="bloque" type="text" name="bloque" placeholder="Bloque"
+                                    maxlength="2" onfocus="entrar(this)" onblur="salir(this)"
+                                    onkeyup="validarNumeroInside(this,1,2)">
+                                <p class="invalid-feedback" style="text-align: center;">El nombre debe
+                                    entre 2 y 60 caracteres</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-3">
+
+                        <!-- 1.10 FORMULARIO - Portal -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-7">
+                                <label class="fs-5 ">Portal</label><br>
+                            </div>
+
+                            <div class="col-5">
+                                <input class="form-control" id="portal" type="text" name="portal" placeholder="Portal"
+                                    maxlength="2" onfocus="entrar(this)" onblur="salir(this)"
+                                    onkeyup="validarNumeroInside(this,1,2)">
+                                <p class="invalid-feedback" style="text-align: center;">El nombre debe
+                                    entre 2 y 60 caracteres</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <!-- PISO + ESCALERA + PUERTA -->
+                <div class="row">
+
+                    <div class="col-3">
+
+                        <!-- 1.11 FORMULARIO - Piso -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-7">
+                                <label class="fs-5 ">Piso</label><br>
+                            </div>
+
+                            <div class="col-4">
+                                <input class="form-control" id="piso" type="text" name="piso" placeholder="Piso"
+                                    maxlength="2" onfocus="entrar(this)" onblur="salir(this)"
+                                    onkeyup="validarNumeroInside(this,1,2)">
+                                <p class="invalid-feedback" id="errorNombre" style="text-align: center;">El nombre debe
+                                    entre 2 y 60 caracteres</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-3">
+
+                        <!-- 1.12 FORMULARIO - Escalera -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-7">
+                                <label class="fs-5 ">Escalera</label><br>
+                            </div>
+
+                            <div class="col-4">
+                                <input class="form-control" id="escalera" type="text" name="escalera"
+                                    placeholder="Escalera" maxlength="1" onfocus="entrar(this)" onblur="salir(this)"
+                                    onkeyup="validarEscaleraYPuertaInside(this,1,1)">
+                                <p class="invalid-feedback" id="errorNombre" style="text-align: center;">El nombre debe
+                                    entre 2 y 60 caracteres</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-3">
+
+                        <!-- 1.13 FORMULARIO - Puerta -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-7">
+                                <label class="fs-5 ">Puerta</label><br>
+                            </div>
+
+                            <div class="col-4">
+                                <input class="form-control" id="puerta" type="text" name="puerta" placeholder="Puerta"
+                                    maxlength="1" onfocus="entrar(this)" onblur="salir(this)"
+                                    onkeyup="validarEscaleraYPuertaInside(this,1,1)">
+                                <p class="invalid-feedback" id="errorNombre" style="text-align: center;">El nombre debe
+                                    entre 2 y 60 caracteres</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- 1.14 FORMULARIO - Dirección Complemento -->
+                <div class="row align-items-center text-end">
+
+                    <div class="col-2">
+                        <label class="fs-5 ">Direc. Complemento</label><br>
+                    </div>
+
+                    <div class="col-8">
+                        <input class="form-control" id="direccionComplemento" type="text" name="direccionComplemento"
+                            placeholder="Dirección Complemento" maxlength="60" onfocus="entrar(this)"
+                            onblur="salir(this)" onkeyup="validarStringInside(this,2,60)">
+                        <p class="invalid-feedback" id="errorNombre" style="text-align: center;">La dirección
+                            complemento debe tener entre 2 y 60 caracteres</p>
+                    </div>
+
+                </div>
+
+                <br>
+
+                <!-- 1.15 FORMULARIO - Pais -->
+                <div class="row align-items-center text-end">
+
+                    <div class="col-2">
+                        <label class="fs-5 ">Pais</label><br>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-control col text-start">
+
+                            <label class="selecciones"><input id="pais" class="radio-inline" type="radio"
+                                    value="España/Andorra" name="opcionPais" checked>España / Andorra</label>
+                            <label class="selecciones"><input id="pais" class="radio-inline" type="radio"
+                                    value="Portugal" name="opcionPais">Portugal</label>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <br>
+
+                <!-- CÓDIGO POSTAL + LOCALIDAD + PROVINCIA -->
+                <div class="row">
+
+                    <div class="col-3">
+
+                        <!-- 1.16 FORMULARIO - Código Postal -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-7">
+                                <label class="fs-5 ">Código Postal (*)</label><br>
+                            </div>
+
+                            <div class="col-5">
+                                <input class="form-control" id="codigoPostal" type="text" name="codigoPostal"
+                                    placeholder="Código Postal" maxlength="5" onfocus="entrar(this)"
+                                    onblur="salir(this)" onkeyup="validarCPInside(this)">
+                                <p class="invalid-feedback" id="errorCP" style="text-align: center;">El Código Postal
+                                    debe contener 5 dígitos</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-3">
+
+                        <!-- 1.17 FORMULARIO - Comunidad Autónoma -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-7">
+                                <label class="fs-5 ">Comunidad Autónoma (*)</label><br>
+                            </div>
+
+                            <div class="col-5">
+                                <input class="form-control" id="comunidadAutonoma" type="text" name="comunidadAutonoma"
+                                    placeholder="CA" readonly>
+                                <p class="invalid-feedback" id="errorCA" style="text-align: center;">La Comunidad
+                                    Autónoma no es correcta.</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-3">
+
+                        <!-- 1.18 FORMULARIO - Provincia -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-7">
+                                <label class="fs-5 ">Provincia (*)</label><br>
+                            </div>
+
+                            <div class="col-5">
+                                <input class="form-control" id="provincia" type="text" name="provincia"
+                                    placeholder="Provincia" value="000" readonly>
+                                <p class="invalid-feedback" id="errorProvincia" style="text-align: center;">La Provincia
+                                    no es correcta.</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- MOVIL ENVIO SMS + EMAIL + TELÉFONO CONTACTO -->
+                <div class="row">
+
+                    <div class="col-4">
+
+                        <!-- 1.19 FORMULARIO - Móvil Envio SMS -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-6">
+                                <label class="fs-5 ">Móvil envío SMS</label><br>
+                            </div>
+
+                            <div class="col-6">
+                                <input class="form-control" id="movilEnvioSMS" type="text" name="movilEnvioSMS"
+                                    placeholder="Móvil envío SMS" maxlength="9" onfocus="entrar(this)"
+                                    onblur="salir(this)" onkeyup="validarMovilInside(this)">
+                                <p class="invalid-feedback" id="errorMovil" style="text-align: center;">El nombre debe
+                                    entre 2 y 60 caracteres</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-6">
+
+                        <!-- 1.21 FORMULARIO - Email -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-4">
+                                <label class="fs-5 ">Email</label><br>
+                            </div>
+
+                            <div class="col-8">
+                                <input class="form-control" id="email" type="text" name="email" placeholder="Email"
+                                    maxlength="60" onfocus="entrar(this)" onblur="salir(this)"
+                                    onkeyup="validarEmailInside(this)">
+                                <p class="invalid-feedback" id="errorEmail" style="text-align: center;">El nombre debe
+                                    entre 2 y 60 caracteres</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <div class="row">
+
+                    <div class="col-8">
+
+                        <!-- 1.20 FORMULARIO - Teléfono Contacto -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-3">
+                                <label class="fs-5 ">Teléfono contacto</label><br>
+                            </div>
+
+                            <div class="col-3">
+                                <input class="form-control" id="telefonoContacto" type="text" name="telefonoContacto"
+                                    placeholder="Teléfono contacto" maxlength="9" onfocus="entrar(this)"
+                                    onblur="salir(this)" onkeyup="validarTelefonoInside(this)">
+                                <p class="invalid-feedback" id="errorTelefono" style="text-align: center;">El teléfono debe ser correcto.</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- 2 · DATOS DEL ENVÍO -->
+                <div class="row">
+
+                    <div class="box border-start border-warning border-2">
+                        <h4>Datos del envío</h4>
+                    </div>
+
+                    <p>Establece los datos del envío.</p>
+
+                </div>
+
+                <div class="row">
+
+                    <!-- 2.1 FORMULARIO - Referencia cliente 1 -->
+                    <div class="row align-items-center text-end">
+
+                        <div class="col-2">
+                            <label class="fs-5 ">Referencia cliente 1</label><br>
+                        </div>
+
+                        <div class="col-8">
+                            <input class="form-control" id="referenciaCliente1" type="text" name="referenciaCliente1"
+                                placeholder="Referencia Cliente 1" maxlength="60" onfocus="entrar(this)"
+                                onblur="salir(this)" onkeyup="validarStringInside(this,1,200)">
+                            <p class="invalid-feedback" id="errorNombre" style="text-align: center;">El nombre debe
+                                entre 2 y 60 caracteres</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <div class="row">
+
+                    <!-- 2.2 FORMULARIO - Referencia cliente 2 -->
+                    <div class="row align-items-center text-end">
+
+                        <div class="col-2">
+                            <label class="fs-5 ">Referencia cliente 2</label><br>
+                        </div>
+
+                        <div class="col-8">
+                            <input class="form-control" id="referenciaCliente2" type="text" name="referenciaCliente2"
+                                placeholder="Referencia Cliente 2" maxlength="60" onfocus="entrar(this)"
+                                onblur="salir(this)" onkeyup="validarStringInside(this,1,200)">
+                            <p class="invalid-feedback" id="errorNombre" style="text-align: center;">El nombre debe
+                                entre 2 y 60 caracteres</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <div class="row">
+
+                    <!-- 2.3 FORMULARIO - Referencia cliente 2 -->
+                    <div class="row align-items-center text-end">
+
+                        <div class="col-2">
+                            <label class="fs-5 ">Referencia cliente 3</label><br>
+                        </div>
+
+                        <div class="col-8">
+                            <input class="form-control" id="referenciaCliente3" type="text" name="referenciaCliente3"
+                                placeholder="Referencia Cliente 3" maxlength="60" onfocus="entrar(this)"
+                                onblur="salir(this)" onkeyup="validarStringInside(this,1,200)">
+                            <p class="invalid-feedback" id="errorNombre" style="text-align: center;">El nombre debe
+                                entre 2 y 60 caracteres</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <h5>Peso y tamaño</h5>
+
+                <br>
+
+                <!-- PESO (KG) + PESO VOLUMÉTRICO -->
+                <div class="row">
+
+                    <div class="col-4">
+
+                        <!-- 2.4 FORMULARIO - Peso (Kg) -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-6">
+                                <label class="fs-5 ">Peso (Kg) (*)</label><br>
+                            </div>
+
+                            <div class="col-6">
+                                <input class="form-control" id="peso" type="text" name="peso" placeholder="Peso (Kg)"
+                                    maxlength="4" onfocus="entrar(this)" onblur="salir(this)"
+                                    onkeyup="validarNumeroInside(this,1,4)">
+                                <p class="invalid-feedback" id="errorNombre" style="text-align: center;">Se deben
+                                    introducir caracteres numéricos</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-6">
+
+                        <!-- 2.5 FORMULARIO - Peso Volumétrico (*) -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-4">
+                                <label class="fs-5 ">Peso Volumétrico (*)</label><br>
+                            </div>
+
+                            <div class="col-4">
+                                <input class="form-control" id="pesoVolumetrico" type="text" name="pesoVolumetrico"
+                                    placeholder="Peso Volumétrico" readonly maxlength="60" onfocus="entrar(this)" onblur="salir(this)"
+                                    onkeyup="validarNumeroInside(this,1,60)">
+                                <p class="invalid-feedback" id="errorPesoVolumetrico" style="text-align: center;">Se
+                                    deben
+                                    introducir caracteres numéricos</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <!-- ALTO + ANCHO + LARGO -->
+                <div class="row">
+
+                    <div class="col-3">
+
+                        <!-- 2.6 FORMULARIO - Alto -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-7">
+                                <label class="fs-5 ">Alto (cm) (*)</label><br>
+                            </div>
+
+                            <div class="col-5">
+                                <input class="form-control" id="alto" type="text" name="alto" placeholder="Alto"
+                                    maxlength="4" onfocus="entrar(this)" onblur="salir(this)"
+                                    onkeyup="validarNumeroInside(this,1,60); permitirCacularPesoVolumetrico()">
+                                <p class="invalid-feedback" id="errorNombre" style="text-align: center;">Se deben
+                                    introducir caracteres numéricos</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-3">
+
+                        <!-- 2.7 FORMULARIO - Ancho -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-7">
+                                <label class="fs-5 ">Ancho (cm) (*)</label><br>
+                            </div>
+
+                            <div class="col-5">
+                                <input class="form-control" id="ancho" type="text" name="ancho" placeholder="Ancho"
+                                    maxlength="4" onfocus="entrar(this)" onblur="salir(this)"
+                                    onkeyup="validarNumeroInside(this,1,60); permitirCacularPesoVolumetrico()">
+                                <p class="invalid-feedback" id="errorNombre" style="text-align: center;">Se deben
+                                    introducir caracteres numéricos</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-3">
+
+                        <!-- 2.8 FORMULARIO - Largo -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-7">
+                                <label class="fs-5 ">Largo (cm) (*)</label><br>
+                            </div>
+
+                            <div class="col-5">
+                                <input class="form-control" id="largo" type="text" name="largo" placeholder="Largo"
+                                    maxlength="60" onfocus="entrar(this)" onblur="salir(this)"
+                                    onkeyup="validarNumeroInside(this,1,60); permitirCacularPesoVolumetrico()">
+                                <p class="invalid-feedback" id="errorNombre" style="text-align: center;">Se deben
+                                    introducir caracteres numéricos</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-3">
+
+                        <!-- 2.8 FORMULARIO - Botón Calcular Peso Volumétrico -->
+                        <div class="row align-items-center text-end">
+
+                            <div class="col-3">
+                                <button id="calcularPesoVolumetrico" type="button" value="button" disabled
+                                    onmouseover="entrar(this)" onmouseout="salir(this)"
+                                    onclick="clickCalcularPesoVolumetrico()">Calcular</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- 3 · PREPARAR ENVÍO DE VUELTA ASOCIADO -->
+                <div class="row">
+
+                    <div class="box border-start border-warning border-2">
+                        <h4>Preparar envío de vuelta asociado</h4>
+                    </div>
+
+                    <p>Indica si desea preparar un envío de vuelta asociado.</p>
+
+                </div>
+
+                <div class="row">
+
+                    <!-- 3.1 FORMULARIO - Preparar envío de vuelta asociado -->
+                    <div class="row align-items-center text-end">
+
+                        <div class="col-3">
+                            <input id="envioVueltaCheck" type="checkbox" name="envioVueltaCheck">
+                            <label class="envioVueltaText">Preparar envío vuelta</label>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- 4. SERVICIOS ADICIONALES DEL ENVÍO -->
+                <div class="row">
+
+                    <div class="box border-start border-warning border-2">
+                        <h4>Servicios adicionales del envío</h4>
+                    </div>
+
+                    <p>Establece los servicios adicionales para este envío. (los servicios en gris están incluidos por
+                        defecto)</p>
+
+                </div>
+
+                <div class="row">
+
+                    <!-- 4.1 FORMULARIO - Seguro a Todo Riesgo -->
+                    <div class="row align-items-center text-start">
+
+                        <div class="col-3">
+                            <input id="seguroTodoRiesgoCheck" type="checkbox" name="seguroTodoRiesgoCheck">
+                            <label class="envioVueltaText">Seguro a Todo Riesgo</label>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- IMPORTE + eAR + EED + Reembolso en Cuenta + Entrega con recogida + PEE 5 + PEE 10 + PEE 15 ******************************************************************************* -->
+                <div class="row">
+                    <!-- 4.2 FORMULARIO - Importe -->
+                    <div class="row align-items-center text-end">
+
+                        <div class="col-2">
+                            <label class="fs-5 ">Importe (*)</label><br>
+                        </div>
+
+                        <div class="col-2">
+                            <input class="form-control" id="importeSeguroATodoRiesgo" type="text"
+                                name="importeSeguroATodoRiesgo" placeholder="Importe" maxlength="10"
+                                onfocus="entrar(this)" onblur="salir(this)" onkeyup="validarNumeroInside(this,1,10)">
+                            <p class="invalid-feedback" id="errorNombre" style="text-align: center;">El nombre debe
+                                entre 2 y 60 caracteres</p>
+                        </div>
+
+                    </div>
+
+                    <br>
+
+                    <!-- 4.3 FORMULARIO - eAR (Acuse de Recibo Electrónico) -->
+                    <div class="row align-items-start text-start">
+
+                        <div class="col-3">
+                            <input id="acuseReciboElectronicoCheck" type="checkbox" name="acuseReciboElectronicoCheck">
+                            <label class="envioVueltaText">eAR (Acuse de Recibo Electrónico)</label>
+                        </div>
+
+                    </div>
+
+                    <br>
+
+                    <!-- 4.4 FORMULARIO - EED (Entrega Exclusiva al Destinatario) -->
+                    <div class="row align-items-start text-start">
+
+                        <div class="col-3">
+                            <input id="entregaExclusivaDestinatarioCheck" type="checkbox"
+                                name="entregaExclusivaDestinatarioCheck">
+                            <label class="envioVueltaText">EED (Entrega Exclusiva al Destinatario)</label>
+                        </div>
+
+                    </div>
+
+                    <br>
+
+                    <!-- 4.5 FORMULARIO - Reembolso en Cuenta (CHECK) -->
+                    <div class="row align-items-start text-start">
+
+                        <div class="col-3">
+                            <input id="reembolsoEnCuentaCheck" type="checkbox" name="reembolsoEnCuentaCheck">
+                            <label class="envioVueltaText">Reembolso en Cuenta</label>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- 4.6 FORMULARIO - Importe Reembolso en Cuenta -->
+                <div class="row">
+
+                    <div class="row align-items-center text-end">
+
+                        <div class="col-2">
+                            <label class="fs-5 ">Importe (*)</label><br>
+                        </div>
+
+                        <div class="col-2">
+                            <input class="form-control" id="importeReembolso" type="text" name="importeReembolso"
+                                placeholder="Importe" maxlength="10" onfocus="entrar(this)" onblur="salir(this)"
+                                onkeyup="validarNumeroInside(this,1,10)">
+                            <p class="invalid-feedback" id="errorNombre" style="text-align: center;">El nombre debe
+                                entre 2 y 60 caracteres</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <!-- 4.7 FORMULARIO - IBAN -->
+                <div class="row">
+
+                    <div class="row align-items-center text-end">
+
+                        <div class="col-2">
+                            <label class="fs-5 ">IBAN</label><br>
+                        </div>
+
+                        <div class="col-6">
+                            <input class="form-control" id="iban" type="text" name="iban" placeholder="IBAN"
+                                maxlength="60" onfocus="entrar(this)" onblur="salir(this)"
+                                onkeyup="validarIBANInside(this)">
+                            <p class="invalid-feedback" id="errorNombre" style="text-align: center;">El nombre
+                                debe entre 2 y 60 caracteres</p>
+                        </div>
+
+                        <!-- 4.8 FORMULARIO - PAGO AGRUPADO (CHECK) -->
+                        <div class="col-2">
+                            <input id="pagoAgrupadoCheck" type="checkbox" name="pagoAgrupadoCheck">
+                            <label class="envioVueltaText">Pago Agrupado<label>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ************************************************ -->
+
+                <hr>
+
+                <!-- 5 · OBSERVACIONES -->
+                <div class="row">
+
+                    <div class="box">
+                        <h4>Observaciones</h4>
+                    </div>
+
+                    <p>Si quieres mostrar alguna observación en la etiqueta del envío indícala a continuación</p>
+
+                </div>
+
+                <div class="row">
+
+                    <!-- 5.1 FORMULARIO - Observaciones -->
+                    <div class="row align-items-center text-end">
+
+                        <div class="col-10">
+                            <input class="form-control" id="observaciones" type="text" name="observaciones"
+                                placeholder="Observaciones" maxlength="60" onfocus="entrar(this)" onblur="salir(this)"
+                                onkeyup="validarStringInside(this,2,60)">
+                            <p class="invalid-feedback" id="errorNombre" style="text-align: center;">El nombre debe
+                                entre 2 y 60 caracteres</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <br>
+                        <p>(*) Campo obligatorio.</p>
+                        <p>(1) Debes incluir al menos Nombre o Empresa.</p>
+                    </div>
+
+                </div>
+
+                <!-- 6 · BOTONES -->
+                <div class="row">
+
+                    <div class="row align-items-center text-end">
+
+                        <div class="col-9">
+                            <button id="borrar" class="btn btn-primary" type="reset" value="submit" onmouseover="entrar(this);"
+                                onmouseout="salir(this);">Cancelar</button>
+                        </div>
+
+                        <div class="col-1">
+                            <button id="submit" class="btn btn-primary" type="submit" value="submit" onmouseover="entrar(this);"
+                                onmouseout="salir(this)">Enviar</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+            </form>
+
+        </div>
+        <br>
+
+</body>
+
+</html>
