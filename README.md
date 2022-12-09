@@ -1,5 +1,5 @@
 # MailForm
-Mailing form based on Correos.
+Mailing form based on Correos, the Spanish public courier service.
 
 ## How was build this app?
 This app was created with HTML, CSS and JavaScript.
